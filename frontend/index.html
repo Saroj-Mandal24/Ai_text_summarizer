@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Text Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Dark Mode Toggle -->
+  <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+    <span id="themeIcon">🌙</span>
+  </button>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">∑</div>
+        <div>
+          <h1>SummarAI</h1>
+          <p class="tagline">Condense anything. Understand everything.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Card -->
+    <main class="card">
+
+      <!-- Input Section -->
+      <section class="input-section">
+        <div class="section-label">YOUR TEXT</div>
+        <div class="textarea-wrapper">
+          <textarea
+            id="inputText"
+            placeholder="Paste any article, essay, research paper, or document here..."
+            spellcheck="false"
+          ></textarea>
+          <button class="clear-btn" id="clearBtn" title="Clear text">✕</button>
+        </div>
+        <div class="input-meta">
+          <span id="wordCount">0 words</span>
+          <span id="charCount">0 characters</span>
+        </div>
+      </section>
+
+      <!-- Options Row -->
+      <section class="options-row">
+        <div class="option-group">
+          <label for="summaryLength">Summary Length</label>
+          <select id="summaryLength">
+            <option value="short">Short — 2-3 sentences</option>
+            <option value="medium" selected>Medium — 1 paragraph</option>
+            <option value="detailed">Detailed — 3-4 paragraphs</option>
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label for="summaryTone">Style</label>
+          <select id="summaryTone">
+            <option value="neutral">Neutral</option>
+            <option value="formal">Formal</option>
+            <option value="simple">Simple (ELI5)</option>
+            <option value="bullet">Bullet Points</option>
+          </select>
+        </div>
+
+        <button class="summarize-btn" id="summarizeBtn">
+          <span id="btnText">Summarize →</span>
+          <span id="btnLoader" class="btn-loader hidden"></span>
+        </button>
+      </section>
+
+      <!-- Error Box -->
+      <div class="error-box hidden" id="errorBox">
+        <span class="error-icon">⚠</span>
+        <span id="errorMsg"></span>
+      </div>
+
+      <!-- Output Section -->
+      <section class="output-section hidden" id="outputSection">
+        <div class="output-header">
+          <div class="section-label">SUMMARY</div>
+          <div class="stats-row" id="statsRow"></div>
+        </div>
+
+        <div class="summary-box" id="summaryBox">
+          <p id="summaryText"></p>
+        </div>
+
+        <div class="action-row">
+          <button class="action-btn" id="copyBtn" onclick="copyToClipboard()">
+            📋 Copy
+          </button>
+          <button class="action-btn" id="downloadBtn" onclick="downloadSummary()">
+            ⬇ Download
+          </button>
+          <button class="action-btn secondary" onclick="resetOutput()">
+            ↺ New Summary
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- History Section -->
+    <section class="history-section" id="historySection" style="display:none">
+      <div class="history-header">
+        <span class="section-label">RECENT SUMMARIES</span>
+        <button class="clear-history-btn" onclick="clearHistory()">Clear All</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </section>
+
+    <footer class="footer">
+      Built with Node.js + Express + Google Gemini API
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
