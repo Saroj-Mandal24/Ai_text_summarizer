@@ -1,6 +1,6 @@
 // ─── Config ───────────────────────────────────────────────────────────────────
 // 👇 Change this to your Render backend URL after deployment
-const API_URL = 'http://localhost:3000/summarize';
+const API_URL = 'https://ai-text-summarizer-wh8y.onrender.com/summarize';
 
 // ─── DOM References ───────────────────────────────────────────────────────────
 const inputText     = document.getElementById('inputText');
