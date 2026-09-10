@@ -61,9 +61,26 @@ Text to summarize:
 ${text}
 """`;
 
-  try {
+  const generateWithRetry = async (prompt, maxRetries = 3) => {
     const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
-    const result  = await model.generateContent(prompt);
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await model.generateContent(prompt);
+      } catch (err) {
+        const isTransient = err.message?.includes('503') || err.message?.includes('500') || err.message?.includes('overloaded');
+        if (isTransient && attempt < maxRetries) {
+          const delayMs = attempt * 1000; // 1s, 2s, 3s
+          console.warn(`Gemini transient error (attempt ${attempt}/${maxRetries}), retrying in ${delayMs}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+          continue;
+        }
+        throw err;
+      }
+    }
+  };
+
+  try {
+    const result  = await generateWithRetry(prompt);
     const summary = result.response.text();
 
     const inputWords  = wordCount;
@@ -97,6 +114,6 @@ ${text}
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running at http://localhost:${PORT}`);
-  console.log(`🤖 Using: Google Gemini API (gemini-1.5-flash)`);
+  console.log(`🤖 Using: Google Gemini API (gemini-3.5-flash-lite)`);
   console.log(`📋 Test: GET http://localhost:${PORT}\n`);
 });
